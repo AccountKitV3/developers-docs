@@ -3,7 +3,7 @@ info:
   title: Account Kit API
   version: 1.0.0
   description: |
-    The Account Kit API provides a suite of tools for managing user accounts,
+    The Account Kit API provides a suite of tools for managing accounts,
     authentication, and billing for your application.
   contact:
     name: Account Kit Support
@@ -14,9 +14,6 @@ info:
 servers:
   - url: https://api.account-kit.com/v1
     description: Production
-  - url: https://api.sandbox.account-kit.com/v1
-    description: Sandbox
-
 tags:
   - name: Authentication
     description: Endpoints for managing user authentication and sessions
