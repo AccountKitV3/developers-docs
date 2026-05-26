@@ -32,12 +32,32 @@ Then visit `http://localhost:8080`.
 
 Update `openapi.yaml` following the [OpenAPI 3.1 specification](https://spec.openapis.org/oas/v3.1.0). Changes pushed to `main` are automatically deployed via GitHub Actions.
 
-## Custom domain setup
+## Deployment
 
-The `CNAME` file points GitHub Pages to `developers.account-kit.com`. In your DNS provider, add a `CNAME` record:
+### 1. Create and push the GitHub repo
 
+```bash
+gh repo create account-kit/developers-docs --public
+git remote add origin https://github.com/account-kit/developers-docs.git
+git push -u origin main
 ```
-developers.account-kit.com  →  <your-github-org>.github.io
-```
 
-Then in the GitHub repo settings under **Pages**, confirm the custom domain is set and HTTPS is enforced.
+### 2. Enable GitHub Pages
+
+In the GitHub repo: **Settings → Pages → Source**, set to **GitHub Actions**. The workflow in `.github/workflows/pages.yml` handles deployment on every push to `main`.
+
+### 3. Configure DNS (Cloudflare)
+
+`account-kit.com` is hosted on Cloudflare (`stella.ns.cloudflare.com` / `dakota.ns.cloudflare.com`).
+
+In the Cloudflare dashboard for the `account-kit.com` zone, add a CNAME record:
+
+| Type  | Name         | Target                       | Proxy status |
+|-------|--------------|------------------------------|--------------|
+| CNAME | developers   | account-kit.github.io        | DNS only (grey cloud) |
+
+> **Important:** set the record to **DNS only** (grey cloud), not proxied. Cloudflare's proxy intercepts TLS and prevents GitHub Pages from provisioning its own HTTPS certificate. Once the cert is issued and the custom domain is verified in GitHub, you can optionally re-enable the proxy.
+
+### 4. Confirm the custom domain in GitHub Pages
+
+Back in **Settings → Pages**, set the custom domain to `developers.account-kit.com` and check **Enforce HTTPS** once the certificate has been issued (usually within a few minutes of the DNS record propagating).
